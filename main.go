@@ -177,3 +177,221 @@ func productExceptSelf(nums []int) []int {
 }// so fucking hard
 
 
+
+//Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+//Output: [1,2,2,3,5,6]
+//Explanation: The arrays we are merging are [1,2,3] and [2,5,6].
+//The result of the merge is [1,2,2,3,5,6] with the underlined elements coming from nums1.
+
+
+func merge(nums1 []int, m int, nums2 []int, n int) {
+	for i := 0; i < n; i++ {
+		nums1[m+i] = nums2[i]
+	}
+	sort.Ints(nums1)
+}
+
+
+//Input: nums = [3,2,2,3], val = 3
+//Output: 2, nums = [2,2,_,_]
+//Explanation: Your function should return k = 2, with the first two elements of nums being 2.
+//It does not matter what you leave beyond the returned k (hence they are underscores).
+
+// 第一輪迴圈 nums[0] == val == 3
+
+
+func removeElement(nums []int, val int) int {
+	n := len(nums)
+	for i := 0; i < n; i++ {
+		if nums[i] == val {
+			nums[i] = nums[n-1]
+			n--
+			i--
+		}
+	}
+	return n
+}
+
+//nums = [3,2,3]
+//        nums[i] != nums[i+1]
+//        nums[i] = nums [i+2]
+//output = 3
+
+package main
+
+import "fmt"
+
+func majorityElement(nums []int) int {
+	// 候选众数和计数器
+	candidate, count := 0, 0
+
+	// 遍历数组
+	for _, num := range nums {
+		if count == 0 {
+			// 如果计数器为 0，选择当前数字为候选众数
+			candidate = num
+			count = 1
+		} else if num == candidate {
+			// 如果当前数字等于候选众数，计数器增加
+			count++
+		} else {
+			// 如果当前数字不等于候选众数，计数器减少
+			count--
+		}
+	}
+
+	// 返回候选众数
+	return candidate
+}
+
+//改良
+// nums = [3,2,3]
+// sort [2,3,3]
+//output = 3
+
+func majorityElement(nums []int) int {
+	// 首先对数组进行排序
+	sort.Ints(nums)
+
+	// 因为众数一定会出现在中间位置，直接返回即可
+	return nums[len(nums)/2]
+}
+
+//Input: nums = [1,1,2]
+//Output: 2, nums = [1,2,_]
+
+
+func removeDuplicates(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	j := 0
+
+	for i := 0; i < len(nums); i++ {
+		if nums[i] != nums[j] {
+			j++
+			nums[j] = nums[i]
+		}
+	}
+	return j + 1
+
+}
+
+
+//Input: nums = [1,1,1,2,2,3]
+
+//Output: 5, nums = [1,1,2,2,3,_]
+//#### **範例 1**
+//輸入：`nums = [1, 1, 1, 2, 2, 3]`
+//1. 起始：`j = 2`，因為前兩個元素始終有效（`nums[0]`、`nums[1]`）。
+//2. 從 `i = 2` 開始遍歷：
+//    - **`nums[i] = 1`**，與**`nums[j-2] = 1`** 相同（多餘），跳過。
+//    - **`nums[i] = 2`**，與**`nums[j-2] = 1`** 不同，保留到 `nums[j]`，即 `nums[2] = 2`，`j++`。
+//    - **`nums[i] = 2`**，與**`nums[j-2] = 2`** 不同，保留到 `nums[j]`，`nums[3] = 2`，`j++`。
+//    - **`nums[i] = 3`**，與**`nums[j-2] = 2`** 不同，保留到 `nums[j]`，`nums[4] = 3`，`j++`。
+
+func removeDuplicates(nums []int) int {
+	if len(nums) <= 2 {
+		return len(nums)
+	}
+
+	j := 2
+	for i := 2; i < len(nums); i++ {
+		// 檢查 nums[i] 是否超過允許
+		if nums[i] != nums[j-2] {
+			nums[j] = nums[i]
+			j++
+		}
+	}
+
+	return j
+}
+
+//Input: s = "III"
+//Output: 3
+//Explanation: III = 3.
+
+func romanToInt(s string) int {
+	romanToIntMap := map[string]int{
+		"I": 1,
+		"V": 5,
+		"X": 10,
+		"L": 50,
+		"C": 100,
+		"D": 500,
+		"M": 1000,
+	}
+	n := len(s)
+	result := 0
+	for i := 0; i < n; i++ {
+		value := romanToIntMap[string(s[i])]
+
+		if i < n-1 && value < romanToIntMap[string(s[i+1])] {
+			result -= value
+		} else {
+			result += value
+		}
+	}
+	return result
+
+
+}
+
+//Input: s = "Hello World"
+//Output: 5
+//Explanation: The last word is "World" with length 5.
+
+func lengthOfLastWord(s string) int {
+	n := len(s)
+	i := n - 1
+	if n == 0 {
+		return 0
+	}
+	for i >= 0 && s[i] != ' ' {
+		i --
+	}
+
+	length := 0
+	for i >= 0 && s[i] == ' ' {
+		i--
+	}
+	for i >= 0 {
+		length++
+	}
+	return length
+
+
+}
+
+
+//better version
+
+func lengthOfLastWord(s string) int {
+	n := len(s)
+	i := n - 1
+
+	// 忽略尾部空格
+	for i >= 0 && s[i] == ' ' {
+		i--
+	}
+
+	// 計算最後一個單詞的長度
+	length := 0
+	for i >= 0 && s[i] != ' ' {
+		length++
+		i--
+	}
+
+	return length
+}
+
+
+
+
+
+
+
+
+
+
